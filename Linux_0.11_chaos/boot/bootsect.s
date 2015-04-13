@@ -185,7 +185,7 @@ ok1_read:
   shl $9, %cx               # sift left the cx by 9 bits => cx = cx * 512 
   add %bx, %cx              # cx = cx + offset of the segment 
   jnc ok2_read              # if CF_Flag not set => not exceeds the limitation of 64kB 
-  je  ok2_read              # ????
+  je  ok2_read              # just at the limitation of 64kB 
   # if exceeds the limitation of 64kB, then calculate how long to read, and then convert 
   # to nr of sectors 
   xor %ax, %ax              # make ax = 0 
@@ -203,7 +203,7 @@ ok2_read:
   jne ok4_read 
   incw track                # else go to read the next track 
 
-ok4_read: 
+ok4_read:                   # ok4_read => change head between 0 and 1 
   mov %ax, head             # change the head from 0 to 1 or from 1 to 0 
   xor %ax, %ax              # clear the ax -- sectors having been read 
 
