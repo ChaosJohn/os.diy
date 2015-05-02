@@ -57,7 +57,9 @@ disk: Image
 	@dd bs=8192 if=Image of=/dev/fd0
 
 boot/head.o: boot/head.s
-	@make head.o -C boot/ tools/system:	boot/head.o init/main.o \
+	@make head.o -C boot/ 
+
+tools/system:	boot/head.o init/main.o \
 		$(ARCHIVES) $(DRIVERS) $(MATH) $(LIBS)
 	@$(LD) $(LDFLAGS) boot/head.o init/main.o \
 	$(ARCHIVES) \
