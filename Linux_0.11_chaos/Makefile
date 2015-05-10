@@ -31,9 +31,9 @@ CPP	+= -Iinclude
 ROOT_DEV= #FLOPPY 
 
 ARCHIVES=kernel/kernel.o mm/mm.o fs/fs.o
-#DRIVERS =kernel/blk_drv/blk_drv.a kernel/chr_drv/chr_drv.a
-#MATH	=kernel/math/math.a
-#LIBS	=lib/lib.a
+DRIVERS =kernel/blk_drv/blk_drv.a kernel/chr_drv/chr_drv.a
+MATH	=kernel/math/math.a
+LIBS	=lib/lib.a
 
 .c.s:
 	@$(CC) $(CFLAGS) -S -o $*.s $<
@@ -59,10 +59,36 @@ disk: Image
 boot/head.o: boot/head.s
 	@make head.o -C boot/ 
 
-tools/system:	boot/head.o init/main.o init/vsprintf.o 
-	@$(LD) $(LDFLAGS) boot/head.o init/main.o init/vsprintf.o \
+tools/system:	boot/head.o init/main.o \
+		$(ARCHIVES) $(DRIVERS) $(MATH) $(LIBS)
+	@$(LD) $(LDFLAGS) boot/head.o init/main.o \
+	$(ARCHIVES) \
+	$(DRIVERS) \
+	$(MATH) \
+	$(LIBS) \
 	-o tools/system 
 	@nm tools/system | grep -v '\(compiled\)\|\(\.o$$\)\|\( [aU] \)\|\(\.\.ng$$\)\|\(LASH[RL]DI\)'| sort > System.map 
+
+kernel/math/math.a:
+	@make -C kernel/math
+
+kernel/blk_drv/blk_drv.a:
+	@make -C kernel/blk_drv
+
+kernel/chr_drv/chr_drv.a:
+	@make -C kernel/chr_drv
+
+kernel/kernel.o:
+	@make -C kernel
+
+mm/mm.o:
+	@make -C mm
+
+fs/fs.o:
+	@make -C fs
+
+lib/lib.a:
+	@make -C lib
 
 boot/setup: boot/setup.s
 	@make setup -C boot
