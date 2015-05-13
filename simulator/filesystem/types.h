@@ -21,6 +21,12 @@
 #define  types_INC
 
 #include <time.h> 
+
+#define strFailure "FAILURE" 
+#define strSuccess "SUCCESS" 
+//char *strFailure = "FAILURE"; 
+//char *strSuccess = "SUCCESS"; 
+
 /* 
  * 每个block的大小（字节）
  * */
@@ -44,6 +50,14 @@
  * */
 #define AMOUNT_OF_DIRENTRY_PER_BLOCK (BLOCKSIZE / sizeof(DIRENTRY))
 /* 
+ * 每个block能存放的USER个数
+ * */
+#define AMOUNT_OF_USER_PER_BLOCK (BLOCKSIZE / sizeof(USER)) 
+/* 
+ * 每个block能存放的GROUP个数
+ * */
+#define AMOUNT_OF_GROUP_PER_BLOCK (BLOCKSIZE / sizeof(GROUP)) 
+/* 
  * INODE空闲表占的block个数
  * */
 #define AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE (sizeof(char) * AMOUNT_OF_INODE / BLOCKSIZE) 
@@ -56,6 +70,15 @@
  * 2054
  * */
 #define AMOUNT_OF_ALLBLOCK (AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE + AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK + AMOUNT_OF_DATABLOCK) 
+/* 
+ * 所有INODE占据的block数量
+ * */
+#define AMOUNT_OF_DATABLOCK_FOR_INODE (AMOUNT_OF_INODE / (BLOCKSIZE / sizeof(INODE)))
+/* 
+ * 所有INODE占据的空间大小
+ * */
+#define SPACE_OF_ALL_INODE (sizeof(INODE) * AMOUNT_OF_INODE)  
+
 
 /* 
  * 定义地址类型
@@ -96,5 +119,28 @@ typedef struct {
   // 数据block空闲表
   char tableDataBlock[AMOUNT_OF_DATABLOCK]; 
 } PartitionTable; 
+
+/* 
+ * GROUP数据结构
+ * 大小=16
+ * */
+typedef struct {
+  // 群组名 
+  char name[15]; 
+  char gid; 
+} GROUP; 
+
+/* 
+ * USER数据结构
+ * 大小=16
+ * */
+typedef struct {
+  // 用户名 
+  char name[14]; 
+  // 用户ID 
+  char uid; 
+  // 用户所属群组ID
+  char gid; 
+} USER; 
 
 #endif   /* ----- #ifndef types_INC  ----- */

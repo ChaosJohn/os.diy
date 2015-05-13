@@ -21,6 +21,7 @@
 #include  "types.h" 
 #include  <stdio.h> 
 #include  "fs.h" 
+#include  <string.h> 
 
 void 
 formatFS() {
@@ -35,11 +36,12 @@ formatFS() {
     int foo = 0; 
     // 将整个分区置0 
     for (; foo < AMOUNT_OF_ALLBLOCK; foo++) {
-      fwrite(buf, 1, BLOCKSIZE, fp); 
+      fwrite(buf, BLOCKSIZE, 1, fp); 
+      /*fwrite(buf, 1, BLOCKSIZE, fp); */
     }
     printf("格式化完成!\n"); 
 
-    fseek(fp, SEEK_SET, 0); 
+    fseek(fp, 0, SEEK_SET); 
 
     char availableFlag = 0; 
 
@@ -57,6 +59,7 @@ formatFS() {
     }
     printf("初始化数据block空闲表完成!\n"); 
 
+    fflush(fp);  
     fclose(fp); 
   } 
 }
@@ -68,8 +71,294 @@ loadPartitionTable() {
     PartitionTable *partitionTable = (PartitionTable *)malloc(sizeof(PartitionTable)); 
     fread(partitionTable->tableINODE, sizeof(char), AMOUNT_OF_INODE, fp); 
     fread(partitionTable->tableDataBlock, sizeof(char), AMOUNT_OF_DATABLOCK, fp); 
+    fflush(fp);  
+    fclose(fp); 
     return partitionTable; 
   } else {
     return NULL; 
   }
+}
+
+int 
+restorePartitionTable() {
+  FILE *fp; 
+  if (NULL != (fp = fopen(vfsPath, "r+"))) {
+    fwrite(partitionTable->tableINODE, sizeof(char), AMOUNT_OF_INODE, fp); 
+    fwrite(partitionTable->tableDataBlock, sizeof(char), AMOUNT_OF_DATABLOCK, fp); 
+    fflush(fp);  
+    fclose(fp); 
+    return 0; 
+  } else {
+    return -1; 
+  }
+}
+
+int 
+findAvailableINODE() {
+  int index = 0; 
+  for (; index < AMOUNT_OF_INODE; index++) {
+    if (1 == partitionTable->tableINODE[index]) {
+      continue; 
+    } else {
+      printf("available inodeNum: %d\n", index); 
+      return index; 
+    }
+  }
+  return -1; 
+}
+
+int 
+findAvailableDataBlock() {
+  int index = 0; 
+  for (; index < AMOUNT_OF_DATABLOCK; index++) {
+    if (1 == partitionTable->tableDataBlock[index]) {
+      continue; 
+    } else {
+      printf("available datablock: %d\n", index); 
+      return index; 
+    }
+  }
+  return -1; 
+}
+
+int 
+createRootDirectory() {
+  int indexOfINODE = findAvailableINODE(); 
+  if (-1 != indexOfINODE) {
+    DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
+    dirEntries[0].inodeNum = indexOfINODE; 
+    sprintf(dirEntries[0].fileName, "."); 
+    dirEntries[1].inodeNum = indexOfINODE; 
+    sprintf(dirEntries[1].fileName, ".."); 
+    INODE inode; 
+    inode.permission = getDefaultPermission(1); 
+    inode.headAddress = findAvailableDataBlock(); 
+    inode.size = 2 * sizeof(DIRENTRY); 
+    inode.links = 1; 
+    inode.createTime = time(NULL); 
+    inode.accessTime = time(NULL); 
+    // 将数据写回到datablock中
+    FILE *fp = openFSForWrite(); 
+    if (NULL == fp) {
+      return -1; 
+    } else {
+      fseek(fp, getActualAddressOfDataBlock(inode.headAddress), SEEK_SET); 
+      fwrite(dirEntries, sizeof(DIRENTRY), AMOUNT_OF_DIRENTRY_PER_BLOCK, fp); 
+      fflush(fp);  
+      fclose(fp); 
+      partitionTable->tableDataBlock[inode.headAddress] = 1; 
+      return writeBackINODE(0, inode); 
+    }
+  } else {
+    return -1; 
+  }
+}
+
+int 
+getDefaultPermission(int type) {
+  /* 
+   * 将输入限定在目录和文件之间
+   * 即type为1是目录，其余情况都为普通文件
+   * */
+  type = (1 == type) ? 1 : 0; 
+  return (FULL_PERMISSION ^ (1 == type ? UMASK_OF_DIR : UMASK_OF_FILE)) | (type << 9); 
+}
+
+int 
+writeBackINODE(int inodeNum, 
+    INODE inode) {
+  /*printf("writeBackINODE: %d\n", index); */
+  FILE *fp = openFSForWrite(); 
+  if (NULL != fp) {
+    fseek(fp, getActualAddressOfINODE(inodeNum), SEEK_SET); 
+    fwrite(&inode, sizeof(INODE), 1, fp); 
+    fflush(fp);  
+    fclose(fp); 
+    partitionTable->tableINODE[inodeNum] = 1; 
+    return restorePartitionTable(partitionTable); 
+  } else {
+    return -1; 
+  }
+}
+
+ADDRESS  
+getActualAddressOfINODE(int inodeNum) {
+  ADDRESS actualAddress = 
+    (AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE + AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK)  
+    * BLOCKSIZE + sizeof(INODE) * inodeNum; 
+  return actualAddress; 
+}
+
+FILE * 
+openFSForWrite() {
+  return fopen(vfsPath, "r+"); 
+}
+
+FILE *
+openFSForRead() {
+  return fopen(vfsPath, "r"); 
+}
+
+int 
+createPasswdFile() {
+  int inodeNum = findAvailableINODE(); 
+  if (-1 != inodeNum) {
+    USER userArray[AMOUNT_OF_USER_PER_BLOCK]; 
+    USER user; 
+    user.gid = 0; 
+    user.uid = 0; 
+    sprintf(user.name, "root"); 
+    INODE inode; 
+    inode.permission = getDefaultPermission(0); 
+    inode.headAddress = findAvailableDataBlock(); 
+    inode.size = 1 * sizeof(USER); 
+    inode.links = 1; 
+    inode.createTime = time(NULL); 
+    inode.accessTime = time(NULL); 
+    FILE *fp = openFSForWrite(); 
+    if (NULL == fp) {
+      return -1; 
+    } else {
+      fseek(fp, getActualAddressOfDataBlock(inode.headAddress), SEEK_SET); 
+      fwrite(userArray, sizeof(USER), 1, fp); 
+      fflush(fp);  
+      fclose(fp); 
+      // 在当前目录中写入新目录项
+      DIRENTRY newEntry; 
+      newEntry.inodeNum = inodeNum; 
+      sprintf(newEntry.fileName, "passwd"); 
+      if (-1 == addDIRENTRY(newEntry)) {
+        return -1; 
+      } 
+      return writeBackINODE(inodeNum, inode); 
+    }
+  } else {
+    return -1; 
+  }
+}
+
+int 
+createGrpFile() {
+  int inodeNum = findAvailableINODE(); 
+  if (-1 != inodeNum) {
+    GROUP groupArray[AMOUNT_OF_GROUP_PER_BLOCK]; 
+    GROUP group; 
+    group.gid = 0; 
+    sprintf(group.name, "abcdefg"); 
+    groupArray[0] = group; 
+    INODE inode; 
+    inode.permission = getDefaultPermission(0); 
+    inode.headAddress = findAvailableDataBlock(); 
+    inode.size = 1 * sizeof(GROUP); 
+    inode.links = 1; 
+    inode.createTime = time(NULL); 
+    inode.accessTime = time(NULL); 
+    // 将数据写回到datablock中
+    FILE *fp = openFSForWrite(); 
+    if (NULL == fp) {
+      return -1; 
+    } else {
+      fseek(fp, getActualAddressOfDataBlock(inode.headAddress), SEEK_SET); 
+      fwrite(groupArray, sizeof(GROUP), 1, fp); 
+      _ls(); 
+      fflush(fp);  
+      fclose(fp); 
+      partitionTable->tableDataBlock[inode.headAddress] = 1; 
+      // 在当前目录中写入新目录项
+      DIRENTRY newEntry; 
+      newEntry.inodeNum = inodeNum; 
+      sprintf(newEntry.fileName, "grp"); 
+      if (-1 == addDIRENTRY(newEntry)) {
+        return -1; 
+      } 
+      return writeBackINODE(inodeNum, inode); 
+    } 
+  } else {
+    return -1; 
+  }
+}
+
+ADDRESS 
+getActualAddressOfDataBlock(int blockNum) {
+  ADDRESS actualAddress = 
+    (AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE + AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK) 
+    * BLOCKSIZE + SPACE_OF_ALL_INODE + sizeof(BLOCKSIZE) * blockNum; 
+  return actualAddress; 
+}
+
+int 
+addDIRENTRY(DIRENTRY newEntry) {
+  DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
+  /*FILE *fp = openFSForWrite(); */
+  FILE *fp = openFSForRead(); 
+  if (NULL == fp) {
+    return -1; 
+  } else {
+    fseek(fp, getActualAddressOfDataBlock(workingDirINODE.headAddress), SEEK_SET); 
+    fread(dirEntries, sizeof(DIRENTRY), AMOUNT_OF_DIRENTRY_PER_BLOCK, fp); 
+    fclose(fp); 
+    int amountOfEntries = workingDirINODE.size / sizeof(DIRENTRY); 
+    int foo = 0; 
+    for (; foo < amountOfEntries; foo++) {
+      printf("%d: %s\n", dirEntries[foo].inodeNum, dirEntries[foo].fileName); 
+    }
+    printf("amountOfEntries: %d\n", amountOfEntries); 
+    dirEntries[amountOfEntries] = newEntry; 
+    amountOfEntries++; 
+    workingDirINODE.size += sizeof(DIRENTRY); 
+    fp = openFSForWrite(); 
+    if (NULL == fp) {
+      return -1; 
+    } else {
+      fseek(fp, getActualAddressOfDataBlock(workingDirINODE.headAddress), SEEK_SET); 
+      /*fwrite(dirEntries, sizeof(DIRENTRY), amountOfEntries + 1, fp); */
+      fwrite(dirEntries, sizeof(DIRENTRY), AMOUNT_OF_DIRENTRY_PER_BLOCK, fp); 
+      fflush(fp);  
+      fclose(fp); 
+      return writeBackINODE(workingDir.inodeNum, workingDirINODE); 
+    }
+  }
+}
+
+INODE 
+loadINODE(int inodeNum) {
+  FILE *fp = openFSForRead(); 
+  if (NULL == fp) {
+    return genEmptyINODE(); 
+  } else {
+    fseek(fp, getActualAddressOfINODE(inodeNum), SEEK_SET); 
+    INODE inode; 
+    fread(&inode, sizeof(INODE), 1, fp); 
+    fflush(fp);  
+    fclose(fp); 
+    return inode; 
+  }
+}
+
+INODE 
+genEmptyINODE() {
+  INODE inode; 
+  inode.permission = ~0; 
+  return inode; 
+}
+
+void 
+_ls() {
+  DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
+  /*FILE *fp = openFSForWrite(); */
+  FILE *fp = openFSForRead(); 
+  if (NULL == fp) {
+    return ; 
+  } else {
+    fseek(fp, getActualAddressOfDataBlock(workingDirINODE.headAddress), SEEK_SET); 
+    fread(dirEntries, sizeof(DIRENTRY), AMOUNT_OF_DIRENTRY_PER_BLOCK, fp); 
+    fclose(fp); 
+    int amountOfEntries = workingDirINODE.size / sizeof(DIRENTRY); 
+    printf("# amountOfEntries: %d\n", amountOfEntries); 
+    int foo = 0; 
+    for (; foo < amountOfEntries; foo++) {
+      printf("# %d: %s\n", dirEntries[foo].inodeNum, dirEntries[foo].fileName); 
+    }
+  }
+
 }
