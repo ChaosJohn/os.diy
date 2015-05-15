@@ -21,6 +21,9 @@
 int 
 compareString(char *strA, 
     char *strB) {
+  if (strlen(strA) != strlen(strB)) {
+    return 0; 
+  }
   char *cursorA = strA; 
   char *cursorB = strB; 
   while (*cursorA != '\0' && *cursorB != '\0') {
@@ -29,8 +32,13 @@ compareString(char *strA,
       cursorB++; 
       continue; 
     } else {
-      return -1; 
+      return 0; 
     }
   }
-  return 0; 
+  return 1; 
+}
+
+void 
+printEMSG() {
+  printf("%s\n", EMSG); 
 }

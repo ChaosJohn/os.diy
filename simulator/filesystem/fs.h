@@ -21,21 +21,42 @@
 #define  fs_INC
 
 #include  "types.h" 
+#include  "utils.h" 
 
 #define FULL_PERMISSION (0777)
 #define UMASK_OF_FILE (0133) 
 #define UMASK_OF_DIR (0022) 
 
 /* 
+ * 错误信息
+ * */
+extern char EMSG[]; 
+
+/* 
+ * 当前的用户
+ * */
+extern USER currentUser; 
+
+/* 
+ * 当前用户所在的主群组
+ * */
+extern GROUP currentGroup; 
+
+/* 
  * 虚拟文件系统文件路径
  * */
 extern char *vfsPath; 
-extern FILE *fp; 
+extern int fd; 
 
 /* 
  * 内存中的分区表
  * */
 extern PartitionTable *partitionTable; 
+
+/* 
+ * 根目录项
+ * */
+extern DIRENTRY rootEntry; 
 
 /* 
  * 内存中的当前目录
@@ -159,5 +180,48 @@ _ls();
 int 
 _mkdir(char *); 
 
+/* 
+ * 查看目录项是否可用
+ * */
+int 
+checkEntryExist(char *, 
+    DIRENTRY *); 
+
+/* 
+ * 获取目录的所有目录项
+ * */
+int 
+getDirEntriesByINODE(INODE, 
+    DIRENTRY *); 
+
+/* 
+ * 改变目录
+ * */
+int 
+_cd(char *); 
+
+/* 
+ * 打印INODE
+ * */
+void 
+printINODE(INODE); 
+
+/* 
+ * 换行
+ * */
+void 
+println(); 
+
+/* 
+ * 打印DIRENTRY
+ * */
+void 
+printDIRENTRY(DIRENTRY); 
+
+/* 
+ * 初始化根目录项
+ * */
+int 
+setRootEntry(); 
 
 #endif   /* ----- #ifndef fs_INC  ----- */

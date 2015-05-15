@@ -11,9 +11,9 @@ all: $(EXECUTABLE)
 #.c.o: 
 	#$(CC) $(CFLAG) -c -o $*.o $< 
 
-$(EXECUTABLE): test.o fs.o 
+$(EXECUTABLE): test.o fs.o utils.o 
 	$(CC) $(CFLAG) -o $(EXECUTABLE) \
-		test.o fs.o 
+		test.o fs.o utils.o 
 
 clean: 
 	rm -rf *.o 

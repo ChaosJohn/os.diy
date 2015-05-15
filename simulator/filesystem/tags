@@ -17,67 +17,84 @@ AMOUNT_OF_INODE	types.h	37;"	d
 AMOUNT_OF_USER_PER_BLOCK	types.h	55;"	d
 BLOCKSIZE	types.h	33;"	d
 BUFSIZE	_test/_types.h	22;"	d
+BUFSIZE	_test/new/_types.h	22;"	d
 CC	Makefile	/^CC = gcc $/;"	m
 CFLAG	Makefile	/^CFLAG = $/;"	m
-DIRENTRY	types.h	/^} DIRENTRY; $/;"	t	typeref:struct:__anon3
+DIRENTRY	types.h	/^} DIRENTRY; $/;"	t	typeref:struct:__anon4
+EMSG	test.c	/^char EMSG[1024]; $/;"	v
 EXECUTABLE	Makefile	/^EXECUTABLE = test.out$/;"	m
-FULL_PERMISSION	fs.h	25;"	d
-GROUP	types.h	/^} GROUP; $/;"	t	typeref:struct:__anon5
-INODE	types.h	/^} INODE; $/;"	t	typeref:struct:__anon2
-PartitionTable	types.h	/^} PartitionTable; $/;"	t	typeref:struct:__anon4
+FULL_PERMISSION	fs.h	26;"	d
+GROUP	types.h	/^} GROUP; $/;"	t	typeref:struct:__anon6
+INODE	types.h	/^} INODE; $/;"	t	typeref:struct:__anon3
+PartitionTable	types.h	/^} PartitionTable; $/;"	t	typeref:struct:__anon5
 SPACE_OF_ALL_INODE	types.h	80;"	d
-TA	_test/_types.h	/^} TA; $/;"	t	typeref:struct:__anon1
-UMASK_OF_DIR	fs.h	27;"	d
-UMASK_OF_FILE	fs.h	26;"	d
-USER	types.h	/^} USER; $/;"	t	typeref:struct:__anon6
+TA	_test/_types.h	/^} TA; $/;"	t	typeref:struct:__anon2
+TA	_test/new/_types.h	/^} TA; $/;"	t	typeref:struct:__anon1
+UMASK_OF_DIR	fs.h	28;"	d
+UMASK_OF_FILE	fs.h	27;"	d
+USER	types.h	/^} USER; $/;"	t	typeref:struct:__anon7
+_cd	fs.c	/^_cd(char *fileName) {$/;"	f
 _ls	fs.c	/^_ls() {$/;"	f
 _mkdir	fs.c	/^_mkdir(char *fileName) {$/;"	f
 _types_INC	_test/_types.h	20;"	d
-accessTime	types.h	/^  time_t accessTime; \/\/ 最近访问的时间$/;"	m	struct:__anon2
+_types_INC	_test/new/_types.h	20;"	d
+accessTime	types.h	/^  time_t accessTime; \/\/ 最近访问的时间$/;"	m	struct:__anon3
 addDIRENTRY	fs.c	/^addDIRENTRY(DIRENTRY newEntry) {$/;"	f
-buf	_test/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon1
+buf	_test/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon2
+buf	_test/new/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon1
+checkEntryExist	fs.c	/^checkEntryExist(char *fileName, $/;"	f
 compareString	utils.c	/^compareString(char *strA, $/;"	f
 createGrpFile	fs.c	/^createGrpFile() {$/;"	f
 createPasswdFile	fs.c	/^createPasswdFile() {$/;"	f
 createRootDirectory	fs.c	/^createRootDirectory() {$/;"	f
-createTime	types.h	/^  time_t createTime; \/\/ 创建的时间 $/;"	m	struct:__anon2
+createTime	types.h	/^  time_t createTime; \/\/ 创建的时间 $/;"	m	struct:__anon3
+currentGroup	test.c	/^GROUP currentGroup; $/;"	v
 currentUser	test.c	/^USER currentUser; $/;"	v
-fileName	types.h	/^  char fileName[28]; $/;"	m	struct:__anon3
+fd	test.c	/^int fd; $/;"	v
+fileName	types.h	/^  char fileName[28]; $/;"	m	struct:__anon4
 findAvailableDataBlock	fs.c	/^findAvailableDataBlock() {$/;"	f
 findAvailableINODE	fs.c	/^findAvailableINODE() {$/;"	f
 formatFS	fs.c	/^formatFS() {$/;"	f
-fp	test.c	/^FILE *fp; $/;"	v
 fs_INC	fs.h	21;"	d
 genEmptyINODE	fs.c	/^genEmptyINODE() {$/;"	f
 getActualAddressOfDataBlock	fs.c	/^getActualAddressOfDataBlock(int blockNum) {$/;"	f
 getActualAddressOfINODE	fs.c	/^getActualAddressOfINODE(int inodeNum) {$/;"	f
 getDefaultPermission	fs.c	/^getDefaultPermission(int type) {$/;"	f
-gid	types.h	/^  char gid; $/;"	m	struct:__anon5
+getDirEntriesByINODE	fs.c	/^getDirEntriesByINODE(INODE inode, $/;"	f
 gid	types.h	/^  char gid; $/;"	m	struct:__anon6
-headAddress	types.h	/^  ADDRESS headAddress;  \/\/ 首数据块地址$/;"	m	struct:__anon2
-inodeNum	types.h	/^  int inodeNum; $/;"	m	struct:__anon3
-links	types.h	/^  int links; \/\/ 链接数$/;"	m	struct:__anon2
+gid	types.h	/^  char gid[5]; $/;"	m	struct:__anon7
+headAddress	types.h	/^  ADDRESS headAddress;  \/\/ 首数据块地址$/;"	m	struct:__anon3
+inodeNum	types.h	/^  int inodeNum; $/;"	m	struct:__anon4
+links	types.h	/^  int links; \/\/ 链接数$/;"	m	struct:__anon3
 loadINODE	fs.c	/^loadINODE(int inodeNum) {$/;"	f
 loadPartitionTable	fs.c	/^loadPartitionTable() {$/;"	f
 main	_test/_array.c	/^main(int argc, $/;"	f
 main	_test/_read.c	/^main(int argc, $/;"	f
+main	_test/_read_new.c	/^main(int argc, $/;"	f
 main	_test/_writeStruct.c	/^main(int argc, $/;"	f
+main	_test/new/_readStruct.c	/^main(int argc, $/;"	f
+main	_test/new/_writeStruct.c	/^main(int argc, $/;"	f
 main	test.c	/^main(int argc, $/;"	f
-name	types.h	/^  char name[14]; $/;"	m	struct:__anon6
-name	types.h	/^  char name[15]; $/;"	m	struct:__anon5
-nodeIndex	_test/_types.h	/^  int nodeIndex; $/;"	m	struct:__anon1
+name	types.h	/^  char name[10]; $/;"	m	struct:__anon7
+name	types.h	/^  char name[15]; $/;"	m	struct:__anon6
+nodeIndex	_test/_types.h	/^  int nodeIndex; $/;"	m	struct:__anon2
+nodeIndex	_test/new/_types.h	/^  int nodeIndex; $/;"	m	struct:__anon1
 openFSForRead	fs.c	/^openFSForRead() {$/;"	f
 openFSForWrite	fs.c	/^openFSForWrite() {$/;"	f
 partitionTable	test.c	/^PartitionTable *partitionTable; $/;"	v
-permission	types.h	/^  int permission; \/\/ 权限$/;"	m	struct:__anon2
+permission	types.h	/^  int permission; \/\/ 权限$/;"	m	struct:__anon3
+printDIRENTRY	fs.c	/^printDIRENTRY(DIRENTRY entry) {$/;"	f
+printEMSG	utils.c	/^printEMSG() {$/;"	f
+printINODE	fs.c	/^printINODE(INODE inode) {$/;"	f
+println	fs.c	/^println() {$/;"	f
 restorePartitionTable	fs.c	/^restorePartitionTable() {$/;"	f
-size	types.h	/^  int size;   \/\/ 文件大小, 如果大于1个block，则表示直接寻址 $/;"	m	struct:__anon2
+size	types.h	/^  int size;   \/\/ 文件大小, 如果大于1个block，则表示直接寻址 $/;"	m	struct:__anon3
 strFailure	types.h	25;"	d
 strSuccess	types.h	26;"	d
-tableDataBlock	types.h	/^  char tableDataBlock[AMOUNT_OF_DATABLOCK]; $/;"	m	struct:__anon4
-tableINODE	types.h	/^  char tableINODE[AMOUNT_OF_INODE]; $/;"	m	struct:__anon4
+tableDataBlock	types.h	/^  char tableDataBlock[AMOUNT_OF_DATABLOCK]; $/;"	m	struct:__anon5
+tableINODE	types.h	/^  char tableINODE[AMOUNT_OF_INODE]; $/;"	m	struct:__anon5
 types_INC	types.h	21;"	d
-uid	types.h	/^  char uid; $/;"	m	struct:__anon6
+uid	types.h	/^  char uid; $/;"	m	struct:__anon7
 utils_INC	utils.h	20;"	d
 vfsPath	test.c	/^char *vfsPath = "vfs"; $/;"	v
 workingDir	test.c	/^DIRENTRY workingDir; $/;"	v

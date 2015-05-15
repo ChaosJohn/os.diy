@@ -136,11 +136,11 @@ typedef struct {
  * */
 typedef struct {
   // 用户名 
-  char name[14]; 
+  char name[10]; 
   // 用户ID 
   char uid; 
   // 用户所属群组ID
-  char gid; 
+  char gid[5]; 
 } USER; 
 
 #endif   /* ----- #ifndef types_INC  ----- */

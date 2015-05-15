@@ -24,15 +24,20 @@
 #include  "fs.h" 
 #include  "utils.h" 
 #include  <string.h> 
+#include  <unistd.h> 
+#include  <fcntl.h> 
 
 char *vfsPath = "vfs"; 
 PartitionTable *partitionTable; 
 DIRENTRY workingDir; 
+DIRENTRY rootEntry; 
 INODE workingDirINODE; 
 USER currentUser; 
+GROUP currentGroup; 
+char EMSG[1024]; 
 /*DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; */
 
-FILE *fp; 
+int fd; 
 
 /*char *strFailure = "FAILURE"; */
 /*char *strSuccess = "SUCCESS"; */
@@ -48,7 +53,7 @@ main(int argc,
     char **argv) {
   DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
   formatFS(); 
-  fp = fopen(vfsPath, "r+"); 
+  fd = open(vfsPath, O_RDWR); 
   partitionTable = loadPartitionTable(); 
 
   /*printf("%o\n", FULL_PERMISSION ^ UMASK_OF_FILE | (1 << 9)); */
@@ -58,6 +63,7 @@ main(int argc,
   workingDir.inodeNum = 0; 
   sprintf(workingDir.fileName, "/"); 
   workingDirINODE = loadINODE(workingDir.inodeNum);  
+  rootEntry = workingDir; 
 
   _ls(); 
 
@@ -73,6 +79,18 @@ main(int argc,
   _mkdir("dir2"); 
   _ls(); 
 
+  DIRENTRY entry; 
+  printf("grp%s\n", (0 == checkEntryExist("grp", &entry)) ? "不存在" : "已存在"); 
+
+  _cd("dir1"); 
+  _ls(); 
+  
+  _cd(".."); 
+  _ls(); 
+
+  if (-1 == _cd("grp")) {
+    printEMSG();    
+  }
 
   return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
