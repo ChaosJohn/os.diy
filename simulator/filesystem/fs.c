@@ -362,23 +362,48 @@ getDirEntriesByINODE(INODE inode,
 
 int 
 _cd(char *fileName) {
+  if (1 == compareString(fileName, "/")) {
+    workingDir = rootEntry; 
+    workingDirINODE = loadINODE(rootEntry.inodeNum); 
+    return 0; 
+  }
   DIRENTRY entry; 
   if (1 != checkEntryExist(fileName, &entry)) {
-    sprintf(EMSG, "%s不存在", fileName); 
+    sprintf(EMSG, "'%s'不存在", fileName); 
     return -1; 
   } else {
-    workingDir = entry; 
-    workingDirINODE = loadINODE(workingDir.inodeNum); 
-    if (workingDirINODE.permission & (1 << 9)) {
+    INODE inode = loadINODE(entry.inodeNum); 
+    if (inode.permission & (1 << 9)) {
+      workingDir = entry; 
+      workingDirINODE = inode; 
       printDIRENTRY(workingDir); 
       printINODE(workingDirINODE); 
       println(); 
       return 0; 
     } else {
-      sprintf(EMSG, "%s不是目录", fileName); 
+      sprintf(EMSG, "'%s'不是目录", fileName); 
       return -1; 
     }
   }
+}
+
+int 
+_cdl(char *filePath) {
+  DIRENTRY savedWorkingDir = workingDir; 
+  INODE savedWorkingDirINODE = workingDirINODE; 
+  int arrayNum = splitPath(filePath); 
+  int foo = 0; 
+  for (; foo < arrayNum; foo++) {
+    if (-1 == _cd(*(pathArray + foo))) {
+      workingDir = savedWorkingDir; 
+      workingDirINODE = savedWorkingDirINODE; 
+      sprintf(buf, "cd失败, %s", EMSG); 
+      sprintf(EMSG, "%s", buf); 
+      /*sprintf(EMSG, "cd失败，找不到%s目录", *(pathArray + foo)); */
+      return -1; 
+    }
+  }
+  return 0; 
 }
 
 void 

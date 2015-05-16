@@ -5,17 +5,17 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
 ADDRESS	types.h	/^typedef int ADDRESS; $/;"	t
-AMOUNT_OF_ADDRESS_PER_BLOCK	types.h	46;"	d
-AMOUNT_OF_ALLBLOCK	types.h	72;"	d
-AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK	types.h	67;"	d
-AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE	types.h	63;"	d
-AMOUNT_OF_DATABLOCK	types.h	41;"	d
-AMOUNT_OF_DATABLOCK_FOR_INODE	types.h	76;"	d
-AMOUNT_OF_DIRENTRY_PER_BLOCK	types.h	51;"	d
-AMOUNT_OF_GROUP_PER_BLOCK	types.h	59;"	d
-AMOUNT_OF_INODE	types.h	37;"	d
-AMOUNT_OF_USER_PER_BLOCK	types.h	55;"	d
-BLOCKSIZE	types.h	33;"	d
+AMOUNT_OF_ADDRESS_PER_BLOCK	types.h	56;"	d
+AMOUNT_OF_ALLBLOCK	types.h	82;"	d
+AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK	types.h	77;"	d
+AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE	types.h	73;"	d
+AMOUNT_OF_DATABLOCK	types.h	51;"	d
+AMOUNT_OF_DATABLOCK_FOR_INODE	types.h	86;"	d
+AMOUNT_OF_DIRENTRY_PER_BLOCK	types.h	61;"	d
+AMOUNT_OF_GROUP_PER_BLOCK	types.h	69;"	d
+AMOUNT_OF_INODE	types.h	47;"	d
+AMOUNT_OF_USER_PER_BLOCK	types.h	65;"	d
+BLOCKSIZE	types.h	43;"	d
 BUFSIZE	_test/_types.h	22;"	d
 BUFSIZE	_test/new/_types.h	22;"	d
 CC	Makefile	/^CC = gcc $/;"	m
@@ -26,14 +26,17 @@ EXECUTABLE	Makefile	/^EXECUTABLE = test.out$/;"	m
 FULL_PERMISSION	fs.h	26;"	d
 GROUP	types.h	/^} GROUP; $/;"	t	typeref:struct:__anon6
 INODE	types.h	/^} INODE; $/;"	t	typeref:struct:__anon3
+MAX_LENGTH_OF_FILENAME	types.h	33;"	d
+PATH_DEPTH	types.h	38;"	d
 PartitionTable	types.h	/^} PartitionTable; $/;"	t	typeref:struct:__anon5
-SPACE_OF_ALL_INODE	types.h	80;"	d
+SPACE_OF_ALL_INODE	types.h	90;"	d
 TA	_test/_types.h	/^} TA; $/;"	t	typeref:struct:__anon2
 TA	_test/new/_types.h	/^} TA; $/;"	t	typeref:struct:__anon1
 UMASK_OF_DIR	fs.h	28;"	d
 UMASK_OF_FILE	fs.h	27;"	d
 USER	types.h	/^} USER; $/;"	t	typeref:struct:__anon7
 _cd	fs.c	/^_cd(char *fileName) {$/;"	f
+_cdl	fs.c	/^_cdl(char *filePath) {$/;"	f
 _ls	fs.c	/^_ls() {$/;"	f
 _mkdir	fs.c	/^_mkdir(char *fileName) {$/;"	f
 _types_INC	_test/_types.h	20;"	d
@@ -43,6 +46,7 @@ addDIRENTRY	fs.c	/^addDIRENTRY(DIRENTRY newEntry) {$/;"	f
 buf	_test/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon2
 buf	_test/new/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon1
 checkEntryExist	fs.c	/^checkEntryExist(char *fileName, $/;"	f
+checkGroupExist	permission.c	/^checkGroupExist(char *name) {$/;"	f
 compareString	utils.c	/^compareString(char *strA, $/;"	f
 createGrpFile	fs.c	/^createGrpFile() {$/;"	f
 createPasswdFile	fs.c	/^createPasswdFile() {$/;"	f
@@ -51,7 +55,7 @@ createTime	types.h	/^  time_t createTime; \/\/ 创建的时间 $/;"	m	struct:__a
 currentGroup	test.c	/^GROUP currentGroup; $/;"	v
 currentUser	test.c	/^USER currentUser; $/;"	v
 fd	test.c	/^int fd; $/;"	v
-fileName	types.h	/^  char fileName[28]; $/;"	m	struct:__anon4
+fileName	types.h	/^  char fileName[MAX_LENGTH_OF_FILENAME]; $/;"	m	struct:__anon4
 findAvailableDataBlock	fs.c	/^findAvailableDataBlock() {$/;"	f
 findAvailableINODE	fs.c	/^findAvailableINODE() {$/;"	f
 formatFS	fs.c	/^formatFS() {$/;"	f
@@ -83,12 +87,16 @@ openFSForRead	fs.c	/^openFSForRead() {$/;"	f
 openFSForWrite	fs.c	/^openFSForWrite() {$/;"	f
 partitionTable	test.c	/^PartitionTable *partitionTable; $/;"	v
 permission	types.h	/^  int permission; \/\/ 权限$/;"	m	struct:__anon3
+permission_INC	permission.h	21;"	d
 printDIRENTRY	fs.c	/^printDIRENTRY(DIRENTRY entry) {$/;"	f
 printEMSG	utils.c	/^printEMSG() {$/;"	f
 printINODE	fs.c	/^printINODE(INODE inode) {$/;"	f
 println	fs.c	/^println() {$/;"	f
 restorePartitionTable	fs.c	/^restorePartitionTable() {$/;"	f
+rootEntry	test.c	/^DIRENTRY rootEntry; $/;"	v
+setRootEntry	fs.c	/^setRootEntry() {$/;"	f
 size	types.h	/^  int size;   \/\/ 文件大小, 如果大于1个block，则表示直接寻址 $/;"	m	struct:__anon3
+splitPath	utils.c	/^splitPath(char ***pathArrayPointer, $/;"	f
 strFailure	types.h	25;"	d
 strSuccess	types.h	26;"	d
 tableDataBlock	types.h	/^  char tableDataBlock[AMOUNT_OF_DATABLOCK]; $/;"	m	struct:__anon5

@@ -153,4 +153,55 @@ typedef struct {
   char gid[5]; 
 } USER; 
 
+
+
+
+
+/* 
+ * 缓冲区
+ * 大小1024*/
+extern char buf[]; 
+
+/* 
+ * 错误信息
+ * */
+extern char EMSG[]; 
+
+/* 
+ * 当前的用户
+ * */
+extern USER currentUser; 
+
+/* 
+ * 当前用户所在的主群组
+ * */
+extern GROUP currentGroup; 
+
+/* 
+ * 虚拟文件系统文件路径
+ * */
+extern char *vfsPath; 
+extern int fd; 
+
+/* 
+ * 内存中的分区表
+ * */
+extern PartitionTable *partitionTable; 
+
+/* 
+ * 根目录项
+ * */
+extern DIRENTRY rootEntry; 
+
+/* 
+ * 内存中的当前目录
+ * */
+extern DIRENTRY workingDir; 
+extern INODE workingDirINODE; 
+
+/* 
+ * 路径分割后的字符串数组 
+ * */
+extern char **pathArray; 
+
 #endif   /* ----- #ifndef types_INC  ----- */

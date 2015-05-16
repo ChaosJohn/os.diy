@@ -27,42 +27,6 @@
 #define UMASK_OF_FILE (0133) 
 #define UMASK_OF_DIR (0022) 
 
-/* 
- * 错误信息
- * */
-extern char EMSG[]; 
-
-/* 
- * 当前的用户
- * */
-extern USER currentUser; 
-
-/* 
- * 当前用户所在的主群组
- * */
-extern GROUP currentGroup; 
-
-/* 
- * 虚拟文件系统文件路径
- * */
-extern char *vfsPath; 
-extern int fd; 
-
-/* 
- * 内存中的分区表
- * */
-extern PartitionTable *partitionTable; 
-
-/* 
- * 根目录项
- * */
-extern DIRENTRY rootEntry; 
-
-/* 
- * 内存中的当前目录
- * */
-extern DIRENTRY workingDir; 
-extern INODE workingDirINODE; 
 
 /* 
  * 格式化文件系统
@@ -199,6 +163,12 @@ getDirEntriesByINODE(INODE,
  * */
 int 
 _cd(char *); 
+
+/* 
+ * 改变目录（长路径）
+ * */
+int 
+_cdl(char *); 
 
 /* 
  * 打印INODE

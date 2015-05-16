@@ -24,7 +24,7 @@
 #include  <malloc.h> 
 #include  "types.h" 
 
-extern char EMSG[]; 
+//extern char EMSG[]; 
 
 /* 
  * 比较两个字符串是否一样
@@ -44,7 +44,6 @@ printEMSG();
  * 分割路径字符串
  * */
 int 
-splitPath(char ***, 
-    char *); 
+splitPath(char *); 
 
 #endif   /* ----- #ifndef utils_INC  ----- */

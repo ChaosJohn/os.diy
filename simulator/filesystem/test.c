@@ -35,12 +35,15 @@ INODE workingDirINODE;
 USER currentUser; 
 GROUP currentGroup; 
 char EMSG[1024]; 
-/*DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; */
-
+char buf[1024]; 
 int fd; 
+int foo; 
 
-/*char *strFailure = "FAILURE"; */
-/*char *strSuccess = "SUCCESS"; */
+/* 
+ * 路径分割后的字符串数组 
+ * */
+char **pathArray; 
+
 
 /* 
  * ===  FUNCTION  ======================================================================
@@ -51,6 +54,11 @@ int fd;
 int
 main(int argc, 
     char **argv) {
+  pathArray = (char **) malloc(sizeof(char *) * PATH_DEPTH); 
+  for (foo = 0; foo < PATH_DEPTH; foo++) {
+    *(pathArray + foo) = (char *) malloc(sizeof(char) * MAX_LENGTH_OF_FILENAME); 
+  }
+
   DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
   formatFS(); 
   fd = open(vfsPath, O_RDWR); 
@@ -84,12 +92,18 @@ main(int argc,
   _cd("dir1"); 
   _ls(); 
   
-  _cd(".."); 
-  _ls(); 
+  /*_cd(".."); */
+  /*_ls(); */
 
   if (-1 == _cd("grp")) {
     printEMSG();    
   }
+  _ls(); 
+
+  if (-1 == _cdl("/dir1/...") ) {
+    printEMSG(); 
+  }
+  _ls(); 
 
   return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
