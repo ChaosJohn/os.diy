@@ -28,6 +28,16 @@
 //char *strSuccess = "SUCCESS"; 
 
 /* 
+ * 文件名最大长度
+ * */
+#define MAX_LENGTH_OF_FILENAME 28 
+
+/* 
+ * 路径深度
+ * */
+#define PATH_DEPTH 10 
+
+/* 
  * 每个block的大小（字节）
  * */
 #define BLOCKSIZE 512 
@@ -107,7 +117,7 @@ typedef struct {
  * */
 typedef struct {
   int inodeNum; 
-  char fileName[28]; 
+  char fileName[MAX_LENGTH_OF_FILENAME]; 
 } DIRENTRY; 
 
 /* 

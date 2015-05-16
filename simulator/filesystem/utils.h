@@ -21,6 +21,8 @@
 
 #include  <string.h> 
 #include  <stdio.h> 
+#include  <malloc.h> 
+#include  "types.h" 
 
 extern char EMSG[]; 
 
@@ -37,5 +39,12 @@ compareString(char *,
  * */
 void 
 printEMSG(); 
+
+/* 
+ * 分割路径字符串
+ * */
+int 
+splitPath(char ***, 
+    char *); 
 
 #endif   /* ----- #ifndef utils_INC  ----- */

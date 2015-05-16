@@ -42,3 +42,40 @@ void
 printEMSG() {
   printf("%s\n", EMSG); 
 }
+
+int 
+splitPath(char ***pathArrayPointer, 
+    char *path) {
+  int foo; 
+  // 初始化路径数组 
+  *pathArrayPointer = (char **) malloc(sizeof(char *) * PATH_DEPTH); 
+  char **pathArray = *pathArrayPointer; 
+  for (foo = 0; foo < PATH_DEPTH; foo++) {
+    *(pathArray + foo) = (char *) malloc(sizeof(char *) * MAX_LENGTH_OF_FILENAME); 
+  }
+  
+  // 分割路径 
+  int pathLength = strlen(path); 
+  char *cursor = path; 
+  char *innerCursor = *pathArray; 
+  int arrayIndex = 0; 
+  while ('\0' != *cursor) {
+    if ('/' == *cursor) {
+      if (cursor = path) {
+        sprintf(*pathArray, "/"); 
+      } else {
+        *innerCursor = '\0'; 
+      } 
+      if ('\0' == *(cursor + 1)) {
+        break; 
+      }
+      arrayIndex++; 
+      innerCursor = *(pathArray + arrayIndex); 
+    } else {
+      *innerCursor = *cursor; 
+      innerCursor++; 
+    }
+    cursor++; 
+  }
+  return (arrayIndex + 1); 
+}

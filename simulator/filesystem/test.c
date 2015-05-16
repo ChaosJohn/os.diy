@@ -60,10 +60,9 @@ main(int argc,
 
   printf("创建根目录 -- %s\n", (-1 == createRootDirectory()) ? strFailure : strSuccess); 
 
-  workingDir.inodeNum = 0; 
-  sprintf(workingDir.fileName, "/"); 
+  setRootEntry(); 
+  workingDir = rootEntry; 
   workingDirINODE = loadINODE(workingDir.inodeNum);  
-  rootEntry = workingDir; 
 
   _ls(); 
 
