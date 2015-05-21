@@ -22,6 +22,7 @@
 
 #include  "types.h" 
 #include  "utils.h" 
+#include  "permission.h" 
 
 #define FULL_PERMISSION (0777)
 #define UMASK_OF_FILE (0133) 
@@ -139,16 +140,32 @@ void
 _ls(); 
 
 /* 
+ * ll
+ * */
+void 
+_ll(); 
+
+/* 
  * 创建目录
  * */
 int 
 _mkdir(char *); 
 
 /* 
+ * 创建文件或修正已存在文件的时间
+ * */
+int 
+_touch(char *); 
+
+/* 
  * 查看目录项是否可用
  * */
 int 
 checkEntryExist(char *, 
+    DIRENTRY *); 
+int 
+checkEntryExist2(DIRENTRY, 
+    char *, 
     DIRENTRY *); 
 
 /* 
@@ -193,5 +210,13 @@ printDIRENTRY(DIRENTRY);
  * */
 int 
 setRootEntry(); 
+
+/* 
+ * 找到指定文件的对应INODE
+ * */
+int 
+findFileByFilePath(char *, 
+    DIRENTRY *); 
+
 
 #endif   /* ----- #ifndef fs_INC  ----- */

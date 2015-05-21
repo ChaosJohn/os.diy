@@ -41,16 +41,25 @@ compareString(char *strA,
 void 
 printEMSG() {
   printf("%s\n", EMSG); 
+  resetEMSG(); 
+}
+
+void 
+resetEMSG() {
+  memset(EMSG, 0, 1024); 
 }
 
 int 
 splitPath(char *path) {
+  /*printf("%s\n", path); */
   char *cursor = path; 
   char *innerCursor = *pathArray; 
+  memset(innerCursor, 0, MAX_LENGTH_OF_FILENAME); 
   int arrayIndex = 0; 
   while ('\0' != *cursor) {
     if ('/' == *cursor) {
       if (cursor == path) {
+        /*memset(*pathArray, 0, MAX_LENGTH_OF_FILENAME); */
         sprintf(*pathArray, "/"); 
       } else {
         *innerCursor = '\0'; 
@@ -60,6 +69,7 @@ splitPath(char *path) {
       }
       arrayIndex++; 
       innerCursor = *(pathArray + arrayIndex); 
+      memset(innerCursor, 0, MAX_LENGTH_OF_FILENAME); 
     } else {
       *innerCursor = *cursor; 
       innerCursor++; 
@@ -69,3 +79,34 @@ splitPath(char *path) {
   return (arrayIndex + 1); 
 }
 
+int 
+splitCmd(char *cmd) {
+  if ('\n' == cmd[strlen(cmd) - 1]) {
+    cmd[strlen(cmd) - 1] = '\0'; 
+  }
+  int arrayIndex = 0; 
+  char *cursor = *cmdArray; 
+  char pattern[] = " "; 
+  char *iter = strtok(cmd, pattern); 
+  while (NULL != iter) {
+    memset(cursor, 0, 32); 
+    sprintf(cursor, "%s", iter); 
+    /*printf("%s\n", iter); */
+    /*printf("%s\n", cursor); */
+    iter = strtok(NULL, pattern); 
+    arrayIndex++; 
+    cursor = *(cmdArray + arrayIndex); 
+  }
+  return arrayIndex; 
+}
+
+/* 
+ * 打印一条横线
+ * */
+/*void */
+/*printHorizontalBar() {*/
+  /*int i; */
+  /*for (i = 0; i <= 40; i++) */
+    /*printf("-"); */
+  /*printf("\n"); */
+/*} */

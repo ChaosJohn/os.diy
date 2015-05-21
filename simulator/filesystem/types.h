@@ -33,6 +33,21 @@
 #define MAX_LENGTH_OF_FILENAME 28 
 
 /* 
+ * 用户名和群组名的最大长度
+ * */
+#define MAX_LENGTH_OF_UGNAME 15 
+
+/* 
+ * 密码长度上限
+ * */
+#define MAX_LENGTH_OF_PASSWORD 10 
+
+/* 
+ * 每个用户能加入的群组数量上限
+ * */
+#define MAX_AMOUNT_OF_GROUPS_PER_USER 6 
+
+/* 
  * 路径深度
  * */
 #define PATH_DEPTH 10 
@@ -136,24 +151,41 @@ typedef struct {
  * */
 typedef struct {
   // 群组名 
-  char name[15]; 
+  char name[MAX_LENGTH_OF_UGNAME]; 
   char gid; 
 } GROUP; 
 
 /* 
  * USER数据结构
- * 大小=16
+ * 大小=32 
  * */
 typedef struct {
-  // 用户名 
-  char name[10]; 
+  // 用户名 长度=15
+  char name[MAX_LENGTH_OF_UGNAME]; 
   // 用户ID 
   char uid; 
-  // 用户所属群组ID
-  char gid[5]; 
+  // 用户所属群组ID 长度=6 
+  char gids[MAX_AMOUNT_OF_GROUPS_PER_USER]; 
+  char password[MAX_LENGTH_OF_PASSWORD]; 
 } USER; 
 
+/* 
+ * 命令
+ * */
+typedef struct {
+  char command[32]; 
+  char description[64]; 
+  int (*execute)(int, char **); 
+} CMD; 
 
+/* 
+ * 内存空闲表项
+ * */
+//typedef struct _FreeNode {
+  //ADDRESS addr; 
+  //int size; 
+  //struct _FreeNode *next; 
+//}
 
 
 
@@ -168,6 +200,12 @@ extern char buf[];
 extern char EMSG[]; 
 
 /* 
+ * root用户和群组
+ * */
+extern USER rootUser; 
+extern GROUP rootGroup; 
+
+/* 
  * 当前的用户
  * */
 extern USER currentUser; 
@@ -176,6 +214,21 @@ extern USER currentUser;
  * 当前用户所在的主群组
  * */
 extern GROUP currentGroup; 
+
+/* 
+ * 所有用户
+ * */
+extern USER users[]; 
+
+/* 
+ * 所有群组
+ * */
+extern GROUP groups[]; 
+
+/* 
+ * 用户所在的所有群组
+ * */
+extern GROUP theGroups[]; 
 
 /* 
  * 虚拟文件系统文件路径
@@ -204,4 +257,13 @@ extern INODE workingDirINODE;
  * */
 extern char **pathArray; 
 
+/* 
+ * 命令分割后的字符串数组
+ * */
+extern char **cmdArray; 
+
+/* 
+ * 命令数组
+ * */
+extern CMD cmds[]; 
 #endif   /* ----- #ifndef types_INC  ----- */

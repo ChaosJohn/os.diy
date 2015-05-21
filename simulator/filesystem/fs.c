@@ -115,13 +115,15 @@ createRootDirectory() {
   if (-1 != indexOfINODE) {
     DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
     dirEntries[0].inodeNum = indexOfINODE; 
-    /*memset(dirEntries[0].fileName, 0, 28); */
+    memset(dirEntries[0].fileName, 0, MAX_LENGTH_OF_FILENAME); 
     sprintf(dirEntries[0].fileName, "."); 
     dirEntries[1].inodeNum = indexOfINODE; 
-    /*memset(dirEntries[1].fileName, 0, 28); */
+    memset(dirEntries[0].fileName, 0, MAX_LENGTH_OF_FILENAME); 
     sprintf(dirEntries[1].fileName, ".."); 
     INODE inode; 
     inode.permission = getDefaultPermission(1); 
+    setUid(&inode, currentUser.uid); 
+    setGid(&inode, currentGroup.gid); 
     inode.headAddress = findAvailableDataBlock(); 
     inode.size = 2 * sizeof(DIRENTRY); 
     inode.links = 1; 
@@ -182,18 +184,25 @@ createPasswdFile() {
   if (-1 != inodeNum) {
     USER userArray[AMOUNT_OF_USER_PER_BLOCK]; 
     USER user; 
-    user.gid[0] = currentGroup.gid; 
+    memset(user.gids, -1, MAX_AMOUNT_OF_GROUPS_PER_USER); 
+    user.gids[0] = currentGroup.gid; 
     user.uid = 0; 
     sprintf(user.name, "root"); 
+    memset(user.password, -1, MAX_LENGTH_OF_PASSWORD); 
+    sprintf(user.password, "root"); 
+    user.gids[0] = 0; 
+    userArray[0] = user; 
     INODE inode; 
     inode.permission = getDefaultPermission(0); 
+    setUid(&inode, currentUser.uid); 
+    setGid(&inode, currentGroup.gid); 
     inode.headAddress = findAvailableDataBlock(); 
     inode.size = 1 * sizeof(USER); 
     inode.links = 1; 
     inode.createTime = time(NULL); 
     inode.accessTime = time(NULL); 
     lseek(fd, getActualAddressOfDataBlock(inode.headAddress), SEEK_SET); 
-    write(fd, userArray, sizeof(USER)); 
+    write(fd, userArray, sizeof(USER) * AMOUNT_OF_USER_PER_BLOCK); 
     currentUser = user; 
     partitionTable->tableDataBlock[inode.headAddress] = 1; 
     // 在当前目录中写入新目录项
@@ -220,11 +229,14 @@ createGrpFile() {
     groupArray[0] = group; 
     INODE inode; 
     inode.permission = getDefaultPermission(0); 
+    setUid(&inode, currentUser.uid); 
+    setGid(&inode, currentGroup.gid); 
     inode.headAddress = findAvailableDataBlock(); 
     inode.size = 1 * sizeof(GROUP); 
     inode.links = 1; 
     inode.createTime = time(NULL); 
     inode.accessTime = time(NULL); 
+    lseek(fd, getActualAddressOfDataBlock(inode.headAddress), SEEK_SET); 
     write(fd, &group, sizeof(GROUP)); 
     currentGroup = group; 
     partitionTable->tableDataBlock[inode.headAddress] = 1; 
@@ -292,8 +304,31 @@ _ls() {
   printf("\n"); 
 }
 
+void 
+_ll() {
+  DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
+  lseek(fd, getActualAddressOfDataBlock(workingDirINODE.headAddress), SEEK_SET); 
+  read(fd, dirEntries, sizeof(DIRENTRY) * AMOUNT_OF_DIRENTRY_PER_BLOCK); 
+  int amountOfEntries = workingDirINODE.size / sizeof(DIRENTRY); 
+  printf("\n# amountOfEntries: %d\n", amountOfEntries); 
+  int foo = 0; 
+  for (; foo < amountOfEntries; foo++) {
+    /*printf("# %d: %s\n", dirEntries[foo].inodeNum, dirEntries[foo].fileName); */
+    printINODE(loadINODE(dirEntries[foo].inodeNum)); 
+    printf("%s ", dirEntries[foo].fileName); 
+    println(); 
+  }
+  /*println(); */
+}
+
 int 
 _mkdir(char *fileName) {
+  DIRENTRY entry; 
+  if (1 == checkEntryExist(fileName, &entry)) {
+    resetEMSG(); 
+    sprintf(EMSG, "%s已存在", fileName); 
+    return -1; 
+  }
   int inodeNum = findAvailableINODE(); 
   if (-1 == inodeNum) {
     return -1; 
@@ -307,6 +342,8 @@ _mkdir(char *fileName) {
     sprintf(dirEntries[1].fileName, ".."); 
     INODE inode; 
     inode.permission = getDefaultPermission(1); 
+    setUid(&inode, currentUser.uid); 
+    setGid(&inode, currentGroup.gid); 
     inode.headAddress = findAvailableDataBlock(); 
     inode.size = 2 * sizeof(DIRENTRY); 
     inode.links = 1; 
@@ -321,6 +358,7 @@ _mkdir(char *fileName) {
 
     DIRENTRY newEntry; 
     newEntry.inodeNum = inodeNum; 
+    memset(newEntry.fileName, 0, MAX_LENGTH_OF_FILENAME); 
     sprintf(newEntry.fileName, "%s", fileName); 
     addDIRENTRY(newEntry); 
 
@@ -329,14 +367,64 @@ _mkdir(char *fileName) {
 }
 
 int 
+_touch(char *fileName) {
+  // 如果文件存在，则修正该文件的时间
+  DIRENTRY entry; 
+  if (-1 != findFileByFilePath(fileName, &entry)) {
+    INODE inode = loadINODE(entry.inodeNum); 
+    inode.createTime = time(NULL); 
+    inode.accessTime = time(NULL); 
+    writeBackINODE(entry.inodeNum, inode); 
+    printf("已修正%s的时间\n", fileName); 
+    return 0; 
+  }
+  // 否则创建该文件 
+  int inodeNum = findAvailableINODE(); 
+  if (-1 == inodeNum) {
+    return -1; 
+  } else {
+    INODE inode; 
+    inode.permission = getDefaultPermission(0); 
+    setUid(&inode, currentUser.uid); 
+    setGid(&inode, currentGroup.gid); 
+    inode.headAddress = findAvailableDataBlock(); 
+    inode.size = 0; 
+    inode.links = 1; 
+    inode.createTime = time(NULL); 
+    inode.accessTime = time(NULL); 
+    // 在datablock空闲表中标记
+    partitionTable->tableDataBlock[inode.headAddress] = 1; 
+    writeBackINODE(inodeNum, inode); 
+    DIRENTRY newEntry; 
+    newEntry.inodeNum = inodeNum; 
+    memset(newEntry.fileName, 0, MAX_LENGTH_OF_FILENAME); 
+    sprintf(newEntry.fileName, "%s", fileName); 
+    addDIRENTRY(newEntry); 
+    return 0; 
+  }
+}
+
+int 
 checkEntryExist(char *fileName, 
     DIRENTRY *entry) {
+  if ('/' == fileName[0]) {
+    return checkEntryExist2(rootEntry, fileName, entry); 
+  } else { 
+    return checkEntryExist2(workingDir, fileName, entry); 
+  } 
+}
+
+int 
+checkEntryExist2(DIRENTRY startDir, 
+    char *fileName, 
+    DIRENTRY *entry) {
   DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
-  if (-1 == getDirEntriesByINODE(workingDirINODE, dirEntries)) {
+  INODE startDirINODE = loadINODE(startDir.inodeNum); 
+  if (-1 == getDirEntriesByINODE(startDirINODE, dirEntries)) {
     return -1; 
   } else {
     int foo = 0; 
-    int amountOfEntries = workingDirINODE.size / sizeof(DIRENTRY); 
+    int amountOfEntries = startDirINODE.size / sizeof(DIRENTRY); 
     for (; foo < amountOfEntries; foo++) {
       if (1 == compareString(fileName, dirEntries[foo].fileName)) {
         *entry = dirEntries[foo]; 
@@ -376,9 +464,9 @@ _cd(char *fileName) {
     if (inode.permission & (1 << 9)) {
       workingDir = entry; 
       workingDirINODE = inode; 
-      printDIRENTRY(workingDir); 
-      printINODE(workingDirINODE); 
-      println(); 
+      /*printDIRENTRY(workingDir); */
+      /*printINODE(workingDirINODE); */
+      /*println(); */
       return 0; 
     } else {
       sprintf(EMSG, "'%s'不是目录", fileName); 
@@ -408,9 +496,40 @@ _cdl(char *filePath) {
 
 void 
 printINODE(INODE inode) {
-  printf("permission: %o; ", inode.permission); 
-  printf("headAddress: %-4d; ", inode.headAddress); 
-  printf("size: %-3d", inode.size);  
+  /*printf("permission: %o; ", inode.permission); */
+  /*printf("headAddress: %-4d; ", inode.headAddress); */
+  /*printf("size: %-3d", inode.size);  */
+  printf("%c", (0 == (inode.permission & UMASK_OF_TYPE)) ? '-' : 'd'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_UR)) ? '-' : 'r'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_UW)) ? '-' : 'w'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_UX)) ? '-' : 'x'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_GR)) ? '-' : 'r'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_GW)) ? '-' : 'w'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_GX)) ? '-' : 'x'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_OR)) ? '-' : 'r'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_OW)) ? '-' : 'w'); 
+  printf("%c", (0 == (inode.permission & UMASK_OF_OX)) ? '-' : 'x'); 
+  printf(" %3d", inode.links); 
+  USER user; 
+  if (1 == checkUserExistByUid(getUid(inode), &user)) {
+    printf("%10s", user.name); 
+  } else {
+    printf("%10s", "unknown"); 
+  }
+  GROUP group; 
+  if (1 == checkGroupExistByGid(getGid(inode), &group)) {
+    printf("%15s", group.name); 
+  } else {
+    printf("%15s", "unknown"); 
+  }
+  printf(" %3d", inode.size); 
+  char accessTime[100]; 
+  sprintf(accessTime, "%s", ctime(&(inode.accessTime))); 
+  if ('\n' == accessTime[strlen(accessTime) - 1]) {
+    accessTime[strlen(accessTime) - 1] = '\0'; 
+  }
+  printf(" %s ", accessTime); 
+  /*printf(" %s ", ctime(&(inode.accessTime))); */
 }
 
 void 
@@ -429,3 +548,34 @@ setRootEntry() {
   rootEntry.inodeNum = 0; 
   sprintf(rootEntry.fileName, "/"); 
 }
+
+int 
+findFileByFilePath(char *filePath, 
+    DIRENTRY *entry) {
+  int arrayNum = splitPath(filePath); 
+  /*printf("arrayNum = %d\n", arrayNum); */
+  int foo = 0; 
+  DIRENTRY startDir, searchedEntry; 
+  if ('/' == *filePath) {
+    /*printf("/\n"); */
+    startDir = rootEntry; 
+    foo = 1; 
+  } else {
+    startDir = workingDir; 
+  }
+  for (; foo < arrayNum; foo++) {
+    /*printf("%s\n", *(pathArray + foo)); */
+    if (1 != checkEntryExist2(startDir,  *(pathArray + foo), &searchedEntry)) {
+      printf(EMSG, "'%s'不存在", *(pathArray + foo)); 
+      /*printEMSG(); */
+      return -1; 
+    } else {
+      startDir = searchedEntry; 
+    }
+  }
+  /**inode = loadINODE(searchedEntry.inodeNum); */
+  *entry = searchedEntry; 
+  return 0; 
+}
+
+

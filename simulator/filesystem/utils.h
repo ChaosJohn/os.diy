@@ -41,9 +41,27 @@ void
 printEMSG(); 
 
 /* 
+ * 将错误信息缓冲区清零
+ * */
+void 
+resetEMSG(); 
+
+/* 
  * 分割路径字符串
  * */
 int 
 splitPath(char *); 
+
+/* 
+ * 分割命令字符串
+ * */
+int 
+splitCmd(char *); 
+
+/* 
+ * 打印一条横线
+ * */
+//void 
+//printHorizontalBar(); 
 
 #endif   /* ----- #ifndef utils_INC  ----- */
