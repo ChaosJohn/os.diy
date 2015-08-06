@@ -1,0 +1,194 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ADDRESS	types.h	/^typedef int ADDRESS; $/;"	t
+AMOUNT_OF_ADDRESS_PER_BLOCK	types.h	71;"	d
+AMOUNT_OF_ALLBLOCK	types.h	97;"	d
+AMOUNT_OF_BLOCK_FOR_TABLE_OF_DATABLOCK	types.h	92;"	d
+AMOUNT_OF_BLOCK_FOR_TABLE_OF_INODE	types.h	88;"	d
+AMOUNT_OF_DATABLOCK	types.h	66;"	d
+AMOUNT_OF_DATABLOCK_FOR_INODE	types.h	101;"	d
+AMOUNT_OF_DIRENTRY_PER_BLOCK	types.h	76;"	d
+AMOUNT_OF_GROUP_PER_BLOCK	types.h	84;"	d
+AMOUNT_OF_INODE	types.h	62;"	d
+AMOUNT_OF_USER_PER_BLOCK	types.h	80;"	d
+BLOCKSIZE	types.h	58;"	d
+BUFSIZE	_test/_types.h	22;"	d
+BUFSIZE	_test/new/_types.h	22;"	d
+CC	Makefile	/^CC = gcc $/;"	m
+CFLAG	Makefile	/^CFLAG = $/;"	m
+CMD	types.h	/^} CMD; $/;"	t	typeref:struct:__anon8
+DIRENTRY	types.h	/^} DIRENTRY; $/;"	t	typeref:struct:__anon4
+EMSG	test.c	/^char EMSG[1024]; $/;"	v
+EXECUTABLE	Makefile	/^EXECUTABLE = test.out$/;"	m
+FULL_PERMISSION	fs.h	27;"	d
+FULL_PERMISSION	permission.h	30;"	d
+GROUP	types.h	/^} GROUP; $/;"	t	typeref:struct:__anon6
+INODE	types.h	/^} INODE; $/;"	t	typeref:struct:__anon3
+MAX_AMOUNT_OF_GROUPS_PER_USER	types.h	48;"	d
+MAX_LENGTH_OF_FILENAME	types.h	33;"	d
+MAX_LENGTH_OF_PASSWORD	types.h	43;"	d
+MAX_LENGTH_OF_UGNAME	types.h	38;"	d
+PATH_DEPTH	types.h	53;"	d
+PartitionTable	types.h	/^} PartitionTable; $/;"	t	typeref:struct:__anon5
+SPACE_OF_ALL_INODE	types.h	105;"	d
+TA	_test/_types.h	/^} TA; $/;"	t	typeref:struct:__anon2
+TA	_test/new/_types.h	/^} TA; $/;"	t	typeref:struct:__anon1
+UMASK_OF_DIR	fs.h	29;"	d
+UMASK_OF_DIR	permission.h	32;"	d
+UMASK_OF_FILE	fs.h	28;"	d
+UMASK_OF_FILE	permission.h	31;"	d
+UMASK_OF_GR	permission.h	38;"	d
+UMASK_OF_GW	permission.h	39;"	d
+UMASK_OF_GX	permission.h	40;"	d
+UMASK_OF_OR	permission.h	41;"	d
+UMASK_OF_OW	permission.h	42;"	d
+UMASK_OF_OX	permission.h	43;"	d
+UMASK_OF_TYPE	permission.h	34;"	d
+UMASK_OF_UR	permission.h	35;"	d
+UMASK_OF_UW	permission.h	36;"	d
+UMASK_OF_UX	permission.h	37;"	d
+USER	types.h	/^} USER; $/;"	t	typeref:struct:__anon7
+_cd	fs.c	/^_cd(char *fileName) {$/;"	f
+_cdl	fs.c	/^_cdl(char *filePath) {$/;"	f
+_chgrp	permission.c	/^_chgrp(char *fileName, $/;"	f
+_chown	permission.c	/^_chown(char *fileName, $/;"	f
+_getGid	permission.c	/^_getGid(char *fileName) {$/;"	f
+_getUid	permission.c	/^_getUid(char *fileName) {$/;"	f
+_ll	fs.c	/^_ll() {$/;"	f
+_ls	fs.c	/^_ls() {$/;"	f
+_mkdir	fs.c	/^_mkdir(char *fileName) {$/;"	f
+_passwd	permission.c	/^_passwd(char *userName) {$/;"	f
+_su	permission.c	/^_su(char *userName) {$/;"	f
+_touch	fs.c	/^_touch(char *fileName) {$/;"	f
+_types_INC	_test/_types.h	20;"	d
+_types_INC	_test/new/_types.h	20;"	d
+_updateUser	permission.c	/^_updateUser(USER user) {$/;"	f
+_whoami	permission.c	/^_whoami() {$/;"	f
+accessTime	types.h	/^  time_t accessTime; \/\/ 最近访问的时间$/;"	m	struct:__anon3
+addDIRENTRY	fs.c	/^addDIRENTRY(DIRENTRY newEntry) {$/;"	f
+addGroup	permission.c	/^addGroup(char *name) {$/;"	f
+addUserWithDefaultGroup	permission.c	/^addUserWithDefaultGroup(char *userName, $/;"	f
+buf	_test/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon2
+buf	_test/new/_types.h	/^  char buf[BUFSIZE]; $/;"	m	struct:__anon1
+buf	test.c	/^char buf[1024]; $/;"	v
+checkEntryExist	fs.c	/^checkEntryExist(char *fileName, $/;"	f
+checkEntryExist2	fs.c	/^checkEntryExist2(DIRENTRY startDir, $/;"	f
+checkGroupExistByGid	permission.c	/^checkGroupExistByGid(char gid, $/;"	f
+checkGroupExistByName	permission.c	/^checkGroupExistByName(char *name, $/;"	f
+checkUserExistByName	permission.c	/^checkUserExistByName(char *name, $/;"	f
+checkUserExistByUid	permission.c	/^checkUserExistByUid(char uid, $/;"	f
+chgroup	cmd.c	/^chgroup(int argc, $/;"	f
+chowner	cmd.c	/^chowner(int argc, $/;"	f
+cmdArray	test.c	/^char **cmdArray; $/;"	v
+cmd_INC	cmd.h	21;"	d
+cmdline	test.c	/^char cmdline[1024]; $/;"	v
+cmds	cmd.c	/^CMD cmds[100] = {$/;"	v
+command	types.h	/^  char command[32]; $/;"	m	struct:__anon8
+compareString	utils.c	/^compareString(char *strA, $/;"	f
+createGrpFile	fs.c	/^createGrpFile() {$/;"	f
+createPasswdFile	fs.c	/^createPasswdFile() {$/;"	f
+createRootDirectory	fs.c	/^createRootDirectory() {$/;"	f
+createTime	types.h	/^  time_t createTime; \/\/ 创建的时间 $/;"	m	struct:__anon3
+currentGroup	test.c	/^GROUP rootGroup, currentGroup; $/;"	v
+currentUser	test.c	/^USER rootUser, currentUser; $/;"	v
+deleteGroupByGid	permission.c	/^deleteGroupByGid(char gid) {$/;"	f
+deleteGroupByName	permission.c	/^deleteGroupByName(char *name) {$/;"	f
+deleteUserByName	permission.c	/^deleteUserByName(char *name) {$/;"	f
+deleteUserByUid	permission.c	/^deleteUserByUid(char uid) {$/;"	f
+description	types.h	/^  char description[64]; $/;"	m	struct:__anon8
+execute	types.h	/^  int (*execute)(int, char **); $/;"	m	struct:__anon8
+executeCmd	cmd.c	/^executeCmd(char *cmdline) {$/;"	f
+fd	test.c	/^int fd; $/;"	v
+fileName	types.h	/^  char fileName[MAX_LENGTH_OF_FILENAME]; $/;"	m	struct:__anon4
+findAvailableDataBlock	fs.c	/^findAvailableDataBlock() {$/;"	f
+findAvailableINODE	fs.c	/^findAvailableINODE() {$/;"	f
+findFileByFilePath	fs.c	/^findFileByFilePath(char *filePath, $/;"	f
+foo	test.c	/^int foo; $/;"	v
+formatFS	fs.c	/^formatFS() {$/;"	f
+fs_INC	fs.h	21;"	d
+genEmptyINODE	fs.c	/^genEmptyINODE() {$/;"	f
+genEmptyUser	permission.c	/^genEmptyUser() {$/;"	f
+getActualAddressOfDataBlock	fs.c	/^getActualAddressOfDataBlock(int blockNum) {$/;"	f
+getActualAddressOfINODE	fs.c	/^getActualAddressOfINODE(int inodeNum) {$/;"	f
+getDefaultPermission	fs.c	/^getDefaultPermission(int type) {$/;"	f
+getDirEntriesByINODE	fs.c	/^getDirEntriesByINODE(INODE inode, $/;"	f
+getGid	permission.c	/^getGid(INODE inode) {$/;"	f
+getTheGroups	permission.c	/^getTheGroups(char *userName, $/;"	f
+getUid	permission.c	/^getUid(INODE inode) {$/;"	f
+gid	types.h	/^  char gid; $/;"	m	struct:__anon6
+gids	types.h	/^  char gids[MAX_AMOUNT_OF_GROUPS_PER_USER]; $/;"	m	struct:__anon7
+groupadd	cmd.c	/^groupadd(int argc, $/;"	f
+groups	test.c	/^GROUP groups[AMOUNT_OF_GROUP_PER_BLOCK]; $/;"	v
+headAddress	types.h	/^  ADDRESS headAddress;  \/\/ 首数据块地址$/;"	m	struct:__anon3
+inodeNum	types.h	/^  int inodeNum; $/;"	m	struct:__anon4
+joinGroup	permission.c	/^joinGroup(char *userName, $/;"	f
+joingroup	cmd.c	/^joingroup(int argc, $/;"	f
+links	types.h	/^  int links; \/\/ 链接数$/;"	m	struct:__anon3
+ll	cmd.c	/^ll(int argc, $/;"	f
+loadGrpFile	permission.c	/^loadGrpFile(int *groupAmount) {$/;"	f
+loadINODE	fs.c	/^loadINODE(int inodeNum) {$/;"	f
+loadPartitionTable	fs.c	/^loadPartitionTable() {$/;"	f
+loadPasswdFile	permission.c	/^loadPasswdFile(int *userAmount) {$/;"	f
+ls	cmd.c	/^ls(int argc, $/;"	f
+main	_test/_array.c	/^main(int argc, $/;"	f
+main	_test/_read.c	/^main(int argc, $/;"	f
+main	_test/_read_new.c	/^main(int argc, $/;"	f
+main	_test/_writeStruct.c	/^main(int argc, $/;"	f
+main	_test/new/_readStruct.c	/^main(int argc, $/;"	f
+main	_test/new/_writeStruct.c	/^main(int argc, $/;"	f
+main	test.c	/^main(int argc, $/;"	f
+mkdir	cmd.c	/^mkdir(int argc, $/;"	f
+name	types.h	/^  char name[MAX_LENGTH_OF_UGNAME]; $/;"	m	struct:__anon6
+name	types.h	/^  char name[MAX_LENGTH_OF_UGNAME]; $/;"	m	struct:__anon7
+nodeIndex	_test/_types.h	/^  int nodeIndex; $/;"	m	struct:__anon2
+nodeIndex	_test/new/_types.h	/^  int nodeIndex; $/;"	m	struct:__anon1
+openFSForRead	fs.c	/^openFSForRead() {$/;"	f
+openFSForWrite	fs.c	/^openFSForWrite() {$/;"	f
+partitionTable	test.c	/^PartitionTable *partitionTable; $/;"	v
+passwd	cmd.c	/^passwd(int argc, $/;"	f
+password	types.h	/^  char password[MAX_LENGTH_OF_PASSWORD]; $/;"	m	struct:__anon7
+pathArray	test.c	/^char **pathArray; $/;"	v
+permission	types.h	/^  int permission; \/\/ 权限$/;"	m	struct:__anon3
+permission_INC	permission.h	21;"	d
+printCmds	cmd.c	/^printCmds(int argc,$/;"	f
+printDIRENTRY	fs.c	/^printDIRENTRY(DIRENTRY entry) {$/;"	f
+printEMSG	utils.c	/^printEMSG() {$/;"	f
+printINODE	fs.c	/^printINODE(INODE inode) {$/;"	f
+println	fs.c	/^println() {$/;"	f
+quit	cmd.c	/^quit(int argc, $/;"	f
+resetEMSG	utils.c	/^resetEMSG() {$/;"	f
+restorePartitionTable	fs.c	/^restorePartitionTable() {$/;"	f
+rootEntry	test.c	/^DIRENTRY rootEntry; $/;"	v
+rootGroup	test.c	/^GROUP rootGroup, currentGroup; $/;"	v
+rootUser	test.c	/^USER rootUser, currentUser; $/;"	v
+setGid	permission.c	/^setGid(INODE *inode, $/;"	f
+setRootEntry	fs.c	/^setRootEntry() {$/;"	f
+setUid	permission.c	/^setUid(INODE *inode, $/;"	f
+showAllGroups	permission.c	/^showAllGroups() {$/;"	f
+showAllUsers	permission.c	/^showAllUsers() {$/;"	f
+showGroups	permission.c	/^showGroups(char *userName) {$/;"	f
+showgroups	cmd.c	/^showgroups(int argc, $/;"	f
+size	types.h	/^  int size;   \/\/ 文件大小, 如果大于1个block，则表示直接寻址 $/;"	m	struct:__anon3
+splitCmd	utils.c	/^splitCmd(char *cmd) {$/;"	f
+splitPath	utils.c	/^splitPath(char *path) {$/;"	f
+strFailure	types.h	25;"	d
+strSuccess	types.h	26;"	d
+su	cmd.c	/^su(int argc, $/;"	f
+tableDataBlock	types.h	/^  char tableDataBlock[AMOUNT_OF_DATABLOCK]; $/;"	m	struct:__anon5
+tableINODE	types.h	/^  char tableINODE[AMOUNT_OF_INODE]; $/;"	m	struct:__anon5
+theGroups	test.c	/^GROUP theGroups[MAX_AMOUNT_OF_GROUPS_PER_USER]; $/;"	v
+touch	cmd.c	/^touch(int argc, $/;"	f
+types_INC	types.h	21;"	d
+uid	types.h	/^  char uid; $/;"	m	struct:__anon7
+useradd	cmd.c	/^useradd(int argc, $/;"	f
+users	test.c	/^USER users[AMOUNT_OF_USER_PER_BLOCK]; $/;"	v
+utils_INC	utils.h	20;"	d
+vfsPath	test.c	/^char *vfsPath = "vfs"; $/;"	v
+whoami	cmd.c	/^whoami(int argc, $/;"	f
+workingDir	test.c	/^DIRENTRY workingDir; $/;"	v
+workingDirINODE	test.c	/^INODE workingDirINODE; $/;"	v
+writeBackINODE	fs.c	/^writeBackINODE(int inodeNum, $/;"	f

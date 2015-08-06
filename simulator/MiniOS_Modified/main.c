@@ -66,6 +66,19 @@ char **cmdArray;
 int
 main(int argc, 
     char **argv) {
+
+  if (argc > 2) {
+    printf("usage: %s [-vfs]\n", argv[0]); 
+    return EXIT_FAILURE; 
+  } else if (argc == 2) {
+    vfsPath = argv[1]; 
+  }
+
+  int vfsExist = 0; 
+  if (access(vfsPath, F_OK) == 0) {
+    vfsExist = 1; 
+  } 
+
   initTables(); 
   for (foo = 1; foo < 6; foo++) {
     ffMalloc(foo * 20); 
@@ -90,42 +103,49 @@ main(int argc,
   }
 
   DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
-  formatFS(); 
+
+  if (vfsExist == 0) 
+    formatFS(); 
   fd = open(vfsPath, O_RDWR); 
   partitionTable = loadPartitionTable(); 
 
   /*printf("%o\n", FULL_PERMISSION ^ UMASK_OF_FILE | (1 << 9)); */
 
-  printf("创建根目录 -- %s\n", (-1 == createRootDirectory()) ? strFailure : strSuccess); 
+  if (vfsExist == 0) 
+    printf("创建根目录 -- %s\n", (-1 == createRootDirectory()) ? strFailure : strSuccess); 
 
   setRootEntry(); 
   workingDir = rootEntry; 
   workingDirINODE = loadINODE(workingDir.inodeNum);  
 
-  printf("创建grp文件 -- %s\n", (-1 == createGrpFile()) ? strFailure : strSuccess); 
+  if (vfsExist == 0) 
+    printf("创建grp文件 -- %s\n", (-1 == createGrpFile()) ? strFailure : strSuccess); 
 
-  printf("创建passwd文件 -- %s\n", (-1 == createPasswdFile()) ? strFailure : strSuccess); 
+  if (vfsExist == 0) 
+    printf("创建passwd文件 -- %s\n", (-1 == createPasswdFile()) ? strFailure : strSuccess); 
 
   _mkdir("dir1"); 
   _mkdir("dir2"); 
 
   DIRENTRY entry; 
 
-  if (-1 == addGroup("chaos")) {
-    printEMSG(); 
-  }
+  if (vfsExist == 0) {
+    if (-1 == addGroup("chaos")) {
+      printEMSG(); 
+    }
 
-  if (-1 == addUserWithDefaultGroup("chaos", "chaos")) {
-    printEMSG(); 
-  }
+    if (-1 == addUserWithDefaultGroup("chaos", "chaos")) {
+      printEMSG(); 
+    }
+  } 
 
-  if (-1 == _touch("file1")) {
-    printEMSG(); 
-  }
+  /*if (-1 == _touch("file1")) {*/
+    /*printEMSG(); */
+  /*}*/
 
   _su("chaos"); 
 
-  /*printCmds(0, NULL); */
+  printCmds(0, NULL); 
 
   while (1) {
     printf("[%s]%c ", currentUser.name, (0 == currentUser.uid) ? '#' : '$'); 
@@ -135,6 +155,6 @@ main(int argc,
       printEMSG(); 
     }
   } 
-  
+
   return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */

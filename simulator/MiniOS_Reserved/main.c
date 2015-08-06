@@ -90,38 +90,38 @@ main(int argc,
   }
 
   DIRENTRY dirEntries[AMOUNT_OF_DIRENTRY_PER_BLOCK]; 
-  formatFS(); 
+  /*formatFS(); */
   fd = open(vfsPath, O_RDWR); 
   partitionTable = loadPartitionTable(); 
 
   /*printf("%o\n", FULL_PERMISSION ^ UMASK_OF_FILE | (1 << 9)); */
 
-  printf("创建根目录 -- %s\n", (-1 == createRootDirectory()) ? strFailure : strSuccess); 
+  /*printf("创建根目录 -- %s\n", (-1 == createRootDirectory()) ? strFailure : strSuccess); */
 
   setRootEntry(); 
   workingDir = rootEntry; 
   workingDirINODE = loadINODE(workingDir.inodeNum);  
 
-  printf("创建grp文件 -- %s\n", (-1 == createGrpFile()) ? strFailure : strSuccess); 
+  /*printf("创建grp文件 -- %s\n", (-1 == createGrpFile()) ? strFailure : strSuccess); */
 
-  printf("创建passwd文件 -- %s\n", (-1 == createPasswdFile()) ? strFailure : strSuccess); 
+  /*printf("创建passwd文件 -- %s\n", (-1 == createPasswdFile()) ? strFailure : strSuccess); */
 
-  _mkdir("dir1"); 
-  _mkdir("dir2"); 
+  /*_mkdir("dir1"); */
+  /*_mkdir("dir2"); */
 
   DIRENTRY entry; 
 
-  if (-1 == addGroup("chaos")) {
-    printEMSG(); 
-  }
+  /*if (-1 == addGroup("chaos")) {*/
+    /*printEMSG(); */
+  /*}*/
 
-  if (-1 == addUserWithDefaultGroup("chaos", "chaos")) {
-    printEMSG(); 
-  }
+  /*if (-1 == addUserWithDefaultGroup("chaos", "chaos")) {*/
+    /*printEMSG(); */
+  /*}*/
 
-  if (-1 == _touch("file1")) {
-    printEMSG(); 
-  }
+  /*if (-1 == _touch("file1")) {*/
+    /*printEMSG(); */
+  /*}*/
 
   _su("chaos"); 
 
